@@ -71,6 +71,7 @@ export default function AddExpense() {
         fetchMembers(defaultOrgId);
       }
     }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOrgListLoaded, userMemberships.data, group]);
 
   useEffect(() => {
@@ -254,7 +255,7 @@ export default function AddExpense() {
         amount: totalAmount,
         description,
         groupId: group,
-        splitType,
+        splitType: splitType as 'equal' | 'exact' | 'percentage' | 'shares',
         splitWith: updatedSplitWith,
         createdBy: user.id,
         paidBy

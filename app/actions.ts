@@ -4,29 +4,7 @@ import { neon } from '@neondatabase/serverless';
 
 const sql = neon(process.env.DATABASE_URL!);
 
-interface SplitMember {
-  id: string;
-  name: string;
-  amountPaid?: number;
-  amountOwed?: number;
-  percentage?: number;
-  shares?: number;
-}
 
-// interface ExpenseData {
-//   amount: number;
-//   description: string;
-//   groupId: string;
-//   splitType: string;
-//   splitWith: SplitMember[];
-//   createdBy: string;
-// }
-
-interface DebtTransaction {
-  from: string;
-  to: string;
-  amount: number;
-}
 
 interface SettlementData {
   groupId: string;
@@ -35,8 +13,23 @@ interface SettlementData {
   amount: number;
   transactionId: string;
 }
-
-export async function addExpense(expenseData: any) {
+interface SplitMember {
+  id: string;
+  name: string;
+  amountPaid?: number;
+  amountOwed?: number;
+  percentage?: number;
+  shares?: number;
+}
+export async function addExpense(expenseData: {
+  description: string;
+  groupId: string;
+  splitType?: 'equal' | 'exact' | 'percentage' | 'shares';
+  splitWith: Array<SplitMember>;
+  createdBy: string;
+  paidBy: string;
+  amount: string | number;
+}) {
   const { description, groupId, splitType = 'equal', splitWith, createdBy ,paidBy} = expenseData;
   const amount = Number(expenseData.amount);
   const expenseId = crypto.randomUUID();
@@ -95,53 +88,12 @@ export async function getBalances(groupId: string) {
     return [];
   }
 }
-
-
-// export async function simplifyDebts(groupId: string) {
-//   const participants = await sql`
-//     SELECT 
-//       user_id, 
-//       SUM(amount_paid) AS total_paid,
-//       SUM(amount_owed) AS total_owed
-//     FROM expense_participants
-//     WHERE expense_id IN (
-//       SELECT expense_id FROM expenses 
-//       WHERE group_id = ${groupId}
-//     )
-//     GROUP BY user_id
-//   `;
-
-//   const balances = participants.map(p => ({
-//     userId: p.user_id,
-//     amount: (p.total_paid || 0) - (p.total_owed || 0)
-//   })).filter(b => Math.abs(b.amount) > 0.01);
-
-//   balances.sort((a, b) => a.amount - b.amount);
-
-//   const transactions = [];
-//   let i = 0, j = balances.length - 1;
-
-//   while (i < j) {
-//     const debtor = balances[i];
-//     const creditor = balances[j];
-//     const amount = Math.min(-debtor.amount, creditor.amount);
-
-//     transactions.push({
-//       from: debtor.userId,
-//       to: creditor.userId,
-//       amount: parseFloat(amount.toFixed(2))
-//     });
-
-//     debtor.amount += amount;
-//     creditor.amount -= amount;
-
-//     if (Math.abs(debtor.amount) < 0.01) i++;
-//     if (Math.abs(creditor.amount) < 0.01) j--;
-//   }
-
-//   return transactions;
-// }
-export async function simplifyDebts(groupId: string): Promise<any> {
+interface ParticipantBalance {
+  user_id: string;
+  total_paid: number;
+  total_owed: number;
+}
+export async function simplifyDebts(groupId: string): Promise<ParticipantBalance[]> {
 
   const participants = await sql`
   SELECT 
@@ -155,7 +107,7 @@ export async function simplifyDebts(groupId: string): Promise<any> {
   )
   GROUP BY user_id
 `;
-  return participants;
+  return participants as ParticipantBalance[];
 }
 
 

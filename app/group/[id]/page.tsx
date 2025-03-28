@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { GroupHeaderSkeleton, MembersSkeleton, BalancesSkeleton, ExpensesSkeleton } from '@/components/group/loading-section';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
 import { Trash2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useOrganizationList, useUser } from '@clerk/nextjs';
@@ -86,6 +85,7 @@ function GroupPage() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function calculateSettlements(dbResponse: any) {
     console.log('dbResponse:', dbResponse); // Log the raw respons
     // json string that dbresponse
@@ -93,6 +93,7 @@ function GroupPage() {
     const balances = {}; // Stores net balances for each user
 
     // Step 1: Compute Net Balances (total_paid - total_owed)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dbResponse.forEach((user: any) => {
       (balances as { [key: string]: number })[user.user_id] = Number(user.total_paid) - Number(user.total_owed);
     });
@@ -167,6 +168,7 @@ function GroupPage() {
   };
   useEffect(() => {
     fetchBalances();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -223,6 +225,7 @@ function GroupPage() {
       }
 
     }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user, userLoaded]);
 
   if (!orgLoaded || !userLoaded || loading) {
