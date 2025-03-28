@@ -35,7 +35,7 @@ export default function LandingPage() {
                 Individual expense addition
               </h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Add expenses to your group. You can add your expenses, and they will be automatically added to your group's expenses.
+                Add expenses to your group. You can add your expenses, and they will be automatically added to your group&apos;s expenses.
               </p>
             </div>
             <div className="group p-8 rounded-3xl transition-all duration-300 hover:bg-gray-50">
@@ -46,7 +46,9 @@ export default function LandingPage() {
                 Expense viewing
               </h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                View all your expenses in one place. You can see how much you've spent and how much you owe.
+                View and manage all your groups in one place. You can see the groups
+                you&apos;re a part of, your role in each group, and easily access each
+                group&apos;s details.
               </p>
             </div>
           </div>

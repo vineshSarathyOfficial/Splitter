@@ -90,19 +90,19 @@ function GroupPage() {
     console.log('dbResponse:', dbResponse); // Log the raw respons
     // json string that dbresponse
     console.log('dbResponse:', JSON.stringify(dbResponse));
-    let balances = {}; // Stores net balances for each user
+    const balances = {}; // Stores net balances for each user
 
     // Step 1: Compute Net Balances (total_paid - total_owed)
     dbResponse.forEach((user: any) => {
       (balances as { [key: string]: number })[user.user_id] = Number(user.total_paid) - Number(user.total_owed);
     });
 
-    let settlements = [];
-    let debtors = [];  // Users who owe money (negative balance)
-    let creditors = []; // Users who should receive money (positive balance)
+    const settlements = [];
+    const debtors = [];  // Users who owe money (negative balance)
+    const creditors = []; // Users who should receive money (positive balance)
 
     // Step 2: Split users into debtors & creditors
-    for (let user in balances) {
+    for (const user in balances) {
       if ((balances as { [key: string]: number })[user] < 0) debtors.push({ userId: user, amount: -(balances as { [key: string]: number })[user] });  // Convert to positive
       else if ((balances as { [key: string]: number })[user] > 0) creditors.push({ userId: user, amount: (balances as { [key: string]: number })[user] });
     }
@@ -110,7 +110,7 @@ function GroupPage() {
     // Step 3: Settle debts
     let i = 0, j = 0;
     while (i < debtors.length && j < creditors.length) {
-      let amount = Math.min(debtors[i].amount, creditors[j].amount);
+      const amount = Math.min(debtors[i].amount, creditors[j].amount);
 
       settlements.push({
         from: debtors[i].userId,

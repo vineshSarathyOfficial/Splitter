@@ -33,7 +33,7 @@ export default function InviteButton({ groupId, inviterName }: {
         description: `An invitation has been sent to ${email}`,
       });
       setEmail('');
-    } catch (error) {
+    } catch (_) {
       toast({
         variant: 'destructive',
         title: 'Error',
