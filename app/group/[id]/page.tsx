@@ -62,11 +62,9 @@ function GroupPage() {
 
   const fetchMembers = async () => {
     try {
-      console.log(userMemberships)
       const org = userMemberships.data?.find(
         (membership) => membership.organization.id === id
       )?.organization;
-      debugger
       if (org) {
         const memberships = await org.getMemberships();
         const membersList = memberships.data.map((membership) => ({
