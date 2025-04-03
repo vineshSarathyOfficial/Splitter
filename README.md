@@ -1,3 +1,5 @@
+Splitter
+![image](https://github.com/user-attachments/assets/b5241912-f278-4abe-80ec-d3964b048a4d)
 
 ## Features
 
