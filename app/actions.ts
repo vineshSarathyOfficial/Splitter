@@ -2,6 +2,7 @@
 
 import { neon } from '@neondatabase/serverless';
 
+// connection for NeonDB
 const sql = neon(process.env.DATABASE_URL!);
 
 
@@ -21,6 +22,13 @@ interface SplitMember {
   percentage?: number;
   shares?: number;
 }
+
+interface ParticipantBalance {
+  user_id: string;
+  total_paid: number;
+  total_owed: number;
+}
+
 export async function addExpense(expenseData: {
   description: string;
   groupId: string;
@@ -88,11 +96,7 @@ export async function getBalances(groupId: string) {
     return [];
   }
 }
-interface ParticipantBalance {
-  user_id: string;
-  total_paid: number;
-  total_owed: number;
-}
+
 export async function simplifyDebts(groupId: string): Promise<ParticipantBalance[]> {
 
   const participants = await sql`
@@ -109,11 +113,6 @@ export async function simplifyDebts(groupId: string): Promise<ParticipantBalance
 `;
   return participants as ParticipantBalance[];
 }
-
-
-
-
-
 
 
 export async function addSettlement(settlementData: SettlementData) {

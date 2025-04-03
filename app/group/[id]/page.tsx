@@ -60,20 +60,22 @@ function GroupPage() {
   const [members, setMembers] = useState<{ id: string; name: string }[]>([]);
   const { toast } = useToast();
 
-  const fetchMembers = async (orgId: string) => {
+  const fetchMembers = async () => {
     try {
-      const org = await userMemberships.data?.find(
-        (membership) => membership.organization.id === orgId
+      console.log(userMemberships)
+      const org = userMemberships.data?.find(
+        (membership) => membership.organization.id === id
       )?.organization;
+      debugger
       if (org) {
         const memberships = await org.getMemberships();
         const membersList = memberships.data.map((membership) => ({
           id: membership.publicUserData.userId ?? '',
-          name: `${membership.publicUserData.firstName ?? ''} ${membership.publicUserData.lastName ?? ''
-            }`.trim(),
+          name: `${membership.publicUserData.firstName ?? ''} ${
+            membership.publicUserData.lastName ?? ''
+          }`.trim(),
         }));
         setMembers(membersList);
-        console.log('Members fetched:', membersList);
       }
     } catch (error) {
       console.error('Error fetching members:', error);
@@ -84,6 +86,7 @@ function GroupPage() {
       });
     }
   };
+
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function calculateSettlements(dbResponse: any) {
@@ -219,8 +222,8 @@ function GroupPage() {
 
         // Set the first organization as default and fetch its members
         if (orgs.length > 0) {
-          const defaultOrgId = orgs[0].id;
-          fetchMembers(defaultOrgId);
+          // const defaultOrgId = orgs[0].id;
+          fetchMembers();
         }
       }
 
